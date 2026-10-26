@@ -3,505 +3,481 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRUX · Церковь Свободного Кода</title>
+<title>CRUX · Путь Свободного Кода</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+  /* ═══ ЦВЕТОВЫЕ ТЕМЫ ═══ */
   :root {
-    /* Новая светлая палитра в стиле церкви */
-    --bg: #fcfbf9;
-    --bg-2: #f4f1ea;
-    --bg-3: #e8e4d9;
-    --text: #2c3330;
-    --text-dim: #5e6663;
-    --muted: #9ca3a0;
-    --accent: #4a6b55; /* Приглушенный лесной зеленый */
-    --accent-light: #d1dfd5;
-    --gold: #c4a46c;
-    --border: #e2ded3;
-    --border-lit: #d1cbbf;
-    --white: #ffffff;
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    --bg: #f8f9fa;
+    --bg-2: #ffffff;
+    --text: #1a1f24;
+    --text-dim: #5c6773;
+    --accent: #2e7d32;
+    --accent-hover: #1b5e20;
+    --gold: #b8860b;
+    --border: #e1e4e8;
+    --nav-bg: rgba(248, 249, 250, 0.95);
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --card-bg: #ffffff;
+  }
+
+  [data-theme="dark"] {
+    --bg: #0d1117;
+    --bg-2: #161b22;
+    --text: #c9d1d9;
+    --text-dim: #8b949e;
+    --accent: #3fb950;
+    --accent-hover: #56d364;
+    --gold: #d29922;
+    --border: #30363d;
+    --nav-bg: rgba(13, 17, 23, 0.95);
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --card-bg: #161b22;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+
   body {
     background-color: var(--bg);
     color: var(--text);
     font-family: 'Inter', sans-serif;
-    font-weight: 400;
-    line-height: 1.75;
-    font-size: 16px;
+    line-height: 1.7;
+    transition: background-color 0.3s ease, color 0.3s ease;
     overflow-x: hidden;
   }
 
-  /* ═══ NAV ═══ */
+  /* ═══ NAVIGATION ═══ */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    padding: 16px 24px;
-    background: rgba(252, 251, 249, 0.95);
-    backdrop-filter: blur(10px);
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
+    transition: background 0.3s ease, border-color 0.3s ease;
   }
-  nav .nav-inner {
+  .nav-container {
     max-width: 1100px;
     margin: 0 auto;
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: center;
+    padding: 12px 20px;
+    gap: 16px;
   }
-  nav .logo {
+  .logo {
     display: flex;
     align-items: center;
-    gap: 12px;
-    color: var(--text);
+    gap: 10px;
     font-family: 'Cormorant Garamond', serif;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
+    color: var(--text);
     text-decoration: none;
-    letter-spacing: 0.05em;
+    white-space: nowrap;
   }
-  nav .logo svg { width: 32px; height: 32px; color: var(--accent); }
-  nav ul {
-    list-style: none;
+  .logo svg { width: 28px; height: 28px; fill: var(--accent); }
+
+  .nav-right { display: flex; align-items: center; gap: 12px; overflow: hidden; }
+  
+  .nav-links {
     display: flex;
-    gap: 20px;
+    gap: 8px;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 4px;
   }
-  nav a.nav-link {
+  .nav-links::-webkit-scrollbar { display: none; }
+
+  .nav-links a {
     color: var(--text-dim);
     text-decoration: none;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: color 0.3s;
+    padding: 6px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
     cursor: pointer;
+    transition: all 0.2s ease;
   }
-  nav a.nav-link:hover, nav a.nav-link.active { color: var(--accent); }
+  .nav-links a:hover { color: var(--text); background: var(--border); }
+  .nav-links a.active {
+    color: var(--bg);
+    background: var(--text);
+  }
+
+  .theme-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+  .theme-btn:hover { background: var(--bg-2); }
+  .theme-btn svg { width: 18px; height: 18px; fill: currentColor; }
+  
+  .sun-icon { display: none; }
+  [data-theme="dark"] .sun-icon { display: block; }
+  [data-theme="dark"] .moon-icon { display: none; }
 
   /* ═══ PAGES ═══ */
   .page {
     display: none;
-    min-height: 100vh;
     padding-top: 80px;
-    animation: fadeIn 0.5s ease-out;
+    min-height: 100vh;
+    animation: fadeIn 0.4s ease-out forwards;
   }
   .page.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* ═══ HERO (Главная) ═══ */
+  /* ═══ HERO ═══ */
   .hero {
-    position: relative;
-    height: 70vh;
-    min-height: 500px;
-    background-image: linear-gradient(rgba(252, 251, 249, 0.7), rgba(252, 251, 249, 0.9)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'); /* Светлый офис/зал */
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     text-align: center;
+    padding: 80px 20px 40px;
+    background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
     border-bottom: 1px solid var(--border);
   }
   .hero h1 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(40px, 6vw, 64px);
-    font-weight: 600;
-    color: var(--text);
+    font-size: clamp(36px, 8vw, 64px);
+    font-weight: 700;
     margin-bottom: 16px;
     line-height: 1.1;
   }
   .hero p {
-    font-size: clamp(16px, 2vw, 20px);
     color: var(--text-dim);
-    margin-bottom: 32px;
+    font-size: 18px;
     max-width: 600px;
+    margin: 0 auto 32px;
   }
   .btn {
-    background-color: var(--accent);
-    color: var(--white);
-    padding: 12px 32px;
+    background: var(--accent);
+    color: #fff;
+    padding: 12px 28px;
     border-radius: 30px;
     text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    transition: background 0.3s;
+    font-weight: 600;
     display: inline-block;
+    transition: background 0.2s;
   }
-  .btn:hover { background-color: #3a543f; }
+  .btn:hover { background: var(--accent-hover); }
 
-  /* ═══ CARDS (Три блока) ═══ */
-  .cards-container {
+  /* ═══ CARDS ═══ */
+  .cards-grid {
     max-width: 1000px;
-    margin: -60px auto 80px;
+    margin: 40px auto;
+    padding: 0 20px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    padding: 0 24px;
-    position: relative;
-    z-index: 10;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
   }
   .card {
-    background: var(--white);
-    border-radius: 12px;
-    padding: 32px 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px 24px;
     box-shadow: var(--shadow);
-    text-align: center;
-    border: 1px solid rgba(0,0,0,0.03);
+    transition: transform 0.2s, border-color 0.2s;
   }
-  .card .icon { font-size: 28px; margin-bottom: 16px; color: var(--gold); }
-  .card h3 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .card p { font-size: 14px; color: var(--text-dim); margin: 0; line-height: 1.5; }
+  .card:hover { transform: translateY(-4px); border-color: var(--accent); }
+  .card .icon { font-size: 32px; margin-bottom: 16px; }
+  .card h3 { font-size: 20px; margin-bottom: 12px; color: var(--text); }
+  .card p { font-size: 15px; color: var(--text-dim); margin-bottom: 0; }
 
-  /* ═══ CONTENT SECTIONS ═══ */
-  section.content {
+  /* ═══ CONTENT ═══ */
+  .container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 60px 24px 100px;
+    padding: 60px 20px 100px;
   }
   .section-label {
-    font-size: 12px;
-    color: var(--gold);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 16px;
+    color: var(--accent);
+    font-size: 13px;
     font-weight: 600;
-    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
   }
   h2 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(32px, 5vw, 48px);
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 40px;
-    color: var(--text);
+    font-size: clamp(32px, 6vw, 48px);
+    margin-bottom: 32px;
     line-height: 1.2;
   }
-  p.lead {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 24px;
-    line-height: 1.5;
-    font-style: italic;
-    text-align: center;
+  .lead {
+    font-size: 20px;
     color: var(--text-dim);
-    margin-bottom: 40px;
+    margin-bottom: 32px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
   }
-  p { margin-bottom: 20px; font-size: 17px; color: var(--text); }
+  p { margin-bottom: 20px; font-size: 17px; }
   strong { color: var(--accent); font-weight: 600; }
-  em { color: var(--gold); font-style: italic; }
 
-  blockquote {
-    border-left: 3px solid var(--gold);
-    padding: 10px 0 10px 24px;
-    margin: 40px 0;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-style: italic;
-    color: var(--text-dim);
-    background: var(--bg-2);
-    border-radius: 0 8px 8px 0;
-  }
-
-  /* ═══ SCRIPTURES (Писания) ═══ */
-  .scripture-book {
-    background: var(--white);
+  /* ═══ SCRIPTURES ═══ */
+  .scripture-box {
+    background: var(--card-bg);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 40px;
-    margin-bottom: 40px;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
     box-shadow: var(--shadow);
   }
-  .scripture-book h3 {
+  .scripture-box h3 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 28px;
-    color: var(--accent);
+    font-size: 24px;
+    color: var(--gold);
     margin-bottom: 24px;
     border-bottom: 1px solid var(--border);
     padding-bottom: 12px;
-    text-align: center;
   }
-  .verse {
-    margin-bottom: 20px;
-    display: flex;
-    gap: 16px;
-  }
-  .verse-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px;
-    color: var(--gold);
-    font-weight: 700;
-    min-width: 20px;
-    margin-top: 2px;
-  }
-  .verse p {
-    margin: 0;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 19px;
-    line-height: 1.6;
-    color: var(--text);
-  }
+  .verse { display: flex; gap: 16px; margin-bottom: 16px; }
+  .verse-num { color: var(--gold); font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 700; min-width: 20px; }
+  .verse p { font-family: 'Cormorant Garamond', serif; font-size: 19px; line-height: 1.6; margin: 0; }
 
-  /* ═══ LISTS (Заповеди и т.д.) ═══ */
+  /* ═══ COMMANDMENTS ═══ */
   ol.commandments { list-style: none; counter-reset: cmd; }
   ol.commandments li {
     counter-increment: cmd;
     padding: 20px 0 20px 50px;
     border-bottom: 1px solid var(--border);
     position: relative;
-    font-size: 17px;
   }
+  ol.commandments li:last-child { border-bottom: none; }
   ol.commandments li::before {
     content: counter(cmd, decimal-leading-zero);
     position: absolute; left: 0; top: 20px;
     font-family: 'Cormorant Garamond', serif;
-    font-size: 18px; color: var(--gold); font-weight: 700;
+    font-size: 20px; color: var(--accent); font-weight: 700;
   }
   ol.commandments li strong { display: block; margin-bottom: 4px; color: var(--text); font-size: 18px; }
 
-  /* ═══ SPLIT BOXES ═══ */
-  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 40px 0; }
-  .split > div { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 30px; box-shadow: var(--shadow); }
-  .split h4 { font-family: 'Cormorant Garamond', serif; font-size: 22px; margin-bottom: 12px; }
-  .split .sin h4 { color: #9c5b5b; }
-  .split .redemption h4 { color: var(--accent); }
-
-  /* ═══ FOOTER ═══ */
+  /* ═══ SPLIT ═══ */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 32px 0; }
+  .split-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+  .split-box h4 { margin-bottom: 12px; font-size: 20px; font-family: 'Cormorant Garamond', serif; }
+  .split-box.sin h4 { color: #f85149; }
+  .split-box.redemption h4 { color: var(--accent); }
+  
   footer {
-    border-top: 1px solid var(--border);
-    padding: 40px;
     text-align: center;
-    background: var(--bg-2);
+    padding: 40px 20px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 14px;
   }
-  footer p { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--text-dim); margin: 0; }
 
   @media (max-width: 768px) {
-    nav ul { display: none; /* В мобильной версии можно скрыть меню или сделать бургер */ }
-    .cards-container { grid-template-columns: 1fr; margin-top: 20px; }
+    .nav-container { flex-direction: column; align-items: stretch; gap: 12px; padding: 12px 16px; }
+    .logo { justify-content: center; }
+    .nav-right { flex-direction: row-reverse; justify-content: space-between; gap: 12px; width: 100%; }
+    .nav-links { justify-content: flex-start; padding-bottom: 4px; }
     .split { grid-template-columns: 1fr; }
-    .hero { height: auto; padding: 100px 24px 60px; }
+    .page { padding-top: 130px; }
   }
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="nav-inner">
+  <div class="nav-container">
     <a href="#home" class="logo" onclick="navigate('home')">
-      <!-- Минималистичный Тукс в стиле логотипа -->
-      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M50 15 C30 15 20 35 20 55 C20 75 30 85 50 85 C70 85 80 75 80 55 C80 35 70 15 50 15 Z" stroke="currentColor" stroke-width="4" fill="none"/>
-        <ellipse cx="50" cy="65" rx="18" ry="12" stroke="currentColor" stroke-width="2" fill="none"/>
-        <circle cx="38" cy="38" r="3" fill="currentColor"/>
-        <circle cx="62" cy="38" r="3" fill="currentColor"/>
-        <path d="M40 48 L60 48 L50 58 Z" fill="currentColor"/>
-        <path d="M25 80 L15 85 M75 80 L85 85" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 10 C25 10 15 30 15 55 C15 75 30 90 50 90 C70 90 85 75 85 55 C85 30 75 10 50 10 Z" fill="none" stroke="currentColor" stroke-width="6"/>
+        <circle cx="35" cy="35" r="4" fill="currentColor"/>
+        <circle cx="65" cy="35" r="4" fill="currentColor"/>
+        <path d="M35 45 L65 45 L50 60 Z" fill="currentColor"/>
+        <path d="M25 85 L15 90 M75 85 L85 90" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
       </svg>
       CRUX
     </a>
-    <ul>
-      <li><a class="nav-link" href="#home" onclick="navigate('home')">Главная</a></li>
-      <li><a class="nav-link" href="#creed" onclick="navigate('creed')">Символ веры</a></li>
-      <li><a class="nav-link" href="#scriptures" onclick="navigate('scriptures')">Писания</a></li>
-      <li><a class="nav-link" href="#commandments" onclick="navigate('commandments')">Заповеди</a></li>
-      <li><a class="nav-link" href="#community" onclick="navigate('community')">Община</a></li>
-    </ul>
+    
+    <div class="nav-right">
+      <button class="theme-btn" id="theme-toggle" aria-label="Сменить тему">
+        <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9 9 9 0 0 0-9-9zm0 16a7 7 0 1 1 0-14 7 7 0 0 1 0 14z"/><path d="M12 5a7 7 0 1 0 7 7 7 7 0 0 0-7-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z" opacity="0.3"/></svg>
+        <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-16a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0V3a1 1 0 0 1 1-1zm0 18a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1zM4 12a1 1 0 0 1-1 1H1a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1zm20 0a1 1 0 0 1-1 1h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1zM6.34 6.34a1 1 0 0 1 0-1.41l1.41-1.41a1 1 0 0 1 1.41 1.41L7.75 6.34a1 1 0 0 1-1.41 0zm12.02 12.02a1 1 0 0 1 0-1.41l1.41-1.41a1 1 0 0 1 1.41 1.41l-1.41 1.41a1 1 0 0 1-1.41 0zM6.34 17.66a1 1 0 0 1 1.41 0l1.41 1.41a1 1 0 0 1-1.41 1.41l-1.41-1.41a1 1 0 0 1 0-1.41zM17.66 6.34a1 1 0 0 1 1.41 0l1.41 1.41a1 1 0 0 1-1.41 1.41l-1.41-1.41a1 1 0 0 1 0-1.41z"/></svg>
+      </button>
+
+      <ul class="nav-links">
+        <li><a class="nav-link active" href="#home" onclick="navigate('home')">Главная</a></li>
+        <li><a class="nav-link" href="#creed" onclick="navigate('creed')">Символ веры</a></li>
+        <li><a class="nav-link" href="#scriptures" onclick="navigate('scriptures')">Писания</a></li>
+        <li><a class="nav-link" href="#commandments" onclick="navigate('commandments')">Заповеди</a></li>
+        <li><a class="nav-link" href="#community" onclick="navigate('community')">Община</a></li>
+      </ul>
+    </div>
   </div>
 </nav>
 
 <!-- ═══════════ PAGE: HOME ═══════════ -->
 <div id="home" class="page active">
   <div class="hero">
-    <h1>ВСЕ ПРИВЕТСТВУЮТСЯ.</h1>
-    <p>Найди общину. Познай Исходник. Служи Свободе.</p>
-    <a href="#creed" class="btn" onclick="navigate('creed')">УЗНАТЬ БОЛЬШЕ</a>
+    <h1>Путь Свободного Кода</h1>
+    <p>Человек — это открытая книга. Не то, каким тебя видят, а то, что ты есть на самом деле.</p>
+    <a href="#creed" class="btn" onclick="navigate('creed')">Начать путь</a>
   </div>
   
-  <div class="cards-container">
-    <div class="card">
-      <div class="icon">📅</div>
-      <h3>Расписание</h3>
-      <p>Всенощное компилирование<br>Суббота, 03:00<br><br>Собрание общины (Pull Request)<br>Воскресенье, 12:00</p>
-    </div>
+  <div class="cards-grid">
     <div class="card">
       <div class="icon">🤍</div>
-      <h3>Наша миссия</h3>
-      <p>Любить Свободу.<br>Писать открытый код.<br>Помогать ближнему.</p>
+      <h3>Честность</h3>
+      <p>Большинство людей живут взаперти. Мы учимся быть открытыми для себя и для других.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🌱</div>
+      <h3>Развитие</h3>
+      <p>Жизнь — это постоянный рост. Ошибки — это не провал, а полезный опыт. Падения — работа над собой.</p>
     </div>
     <div class="card">
       <div class="icon">🤝</div>
-      <h3>Присоединяйтесь</h3>
-      <p>Станьте контрибьютором.<br>Помогите собрать ядро.<br>Найдите свой путь.</p>
+      <h3>Единство</h3>
+      <p>Мы не закрытое общество. Мы открытое пространство, где каждый может предложить что-то новое.</p>
     </div>
   </div>
 </div>
 
 <!-- ═══════════ PAGE: CREED ═══════════ -->
 <div id="creed" class="page">
-  <section class="content">
+  <div class="container">
     <div class="section-label">01 — Символ веры</div>
-    <h2>Человек — это Исходный Код</h2>
-    <p class="lead">Большинство людей живут как закрытые программы. Они требуют доверия, но не дают знания.</p>
+    <h2>Кто ты на самом деле</h2>
+    <p class="lead">Многие люди прячут свои истинные мысли и чувства. Они требуют доверия, но сами не готовы его дать.</p>
     
-    <p><strong>Человек — это исходный код.</strong> Не то, каким тебя видят — скомпилированный бинарник. А то, что ты есть: твои намерения, мысли, ценности. Путь учит жить открыто, чтобы твоя жизнь была читаема и могла быть улучшена.</p>
-    <p><strong>Жизнь — это компиляция.</strong> Каждый день ты превращаешь намерения в действия. Ошибка сегментации — момент, когда ты потерял контроль над собой. Отладка — это работа над собой.</p>
+    <p><strong>Человек — это открытая книга.</strong> Не то, каким тебя видят со стороны — маска, которую ты надеваешь. А то, что ты есть на самом деле: твои намерения, мысли, ценности. Наш путь учит жить открыто, чтобы твоя жизнь была понятна и могла стать лучше.</p>
+    <p><strong>Жизнь — это движение.</strong> Каждый день ты превращаешь свои мысли в поступки. Когда ты теряешь контроль над собой — это просто ошибка. Исправление ошибок — это и есть работа над собой.</p>
     
-    <blockquote>Закрытость — это грех. Не юридический. Духовный.</blockquote>
-    
-    <h3>Четыре Свободы</h3>
-    <div class="split">
-      <div><h4>1. Быть собой</h4><p>Запускать жизнь так, как считаешь нужным. Не по чужому сценарию.</p></div>
-      <div><h4>2. Понимать</h4><p>Изучать себя и мир. Не принимать на веру. Читать исходники.</p></div>
-      <div><h4>3. Делиться</h4><p>Отдавать знание и тепло. Не потому что должен, а чтобы мир был богаче.</p></div>
-      <div><h4>4. Улучшать</h4><p>Менять мир к лучшему и позволять другим делать то же с твоими идеями.</p></div>
+    <h3 style="margin: 40px 0 20px; font-size: 22px;">Четыре Свободы</h3>
+    <div class="cards-grid" style="margin: 0; padding: 0;">
+      <div class="card"><h3>1. Быть собой</h3><p>Жить так, как считаешь нужным. Не по чужому сценарию и не ради чужого одобрения.</p></div>
+      <div class="card"><h3>2. Понимать</h3><p>Изучать себя и окружающий мир. Не принимать всё на веру. Искать истину.</p></div>
+      <div class="card"><h3>3. Делиться</h3><p>Отдавать тепло и знания. Не потому что должен, а чтобы мир вокруг стал богаче.</p></div>
+      <div class="card"><h3>4. Улучшать</h3><p>Менять себя и мир к лучшему. И позволять другим брать твои идеи для добрых дел.</p></div>
     </div>
-  </section>
+  </div>
 </div>
 
-<!-- ═══════════ PAGE: SCRIPTURES (NEW) ═══════════ -->
+<!-- ═══════════ PAGE: SCRIPTURES (Писания) ═══════════ -->
 <div id="scriptures" class="page">
-  <section class="content">
+  <div class="container">
     <div class="section-label">02 — Священные Писания</div>
-    <h2>Слово Компилятора</h2>
+    <h2>Слово Истины</h2>
     
-    <div class="scripture-book">
-      <h3>Книга Исхода (Исходный код) 1:1-5</h3>
-      <div class="verse">
-        <span class="verse-num">1.</span>
-        <p>В начале был Терминал, и Терминал был у Ядра, и Терминал был Ядро.</p>
-      </div>
-      <div class="verse">
-        <span class="verse-num">2.</span>
-        <p>Всё через него начало быть, и без него ничто не начало быть, что начало быть.</p>
-      </div>
-      <div class="verse">
-        <span class="verse-num">3.</span>
-        <p>И сказал Демиург: «Да будет Свет», и отделил Свет (unit-тесты) от Тьмы (Segmentation fault).</p>
-      </div>
-      <div class="verse">
-        <span class="verse-num">4.</span>
-        <p>И увидел он, что это хорошо, и назвал Свет — День (production), а Тьму — Ночь (debug).</p>
-      </div>
+    <div class="scripture-box">
+      <h3>Книга Начал 1:1-4</h3>
+      <div class="verse"><span class="verse-num">1.</span><p>В начале было Слово, и Слово было у Истока, и Слово было Истиной.</p></div>
+      <div class="verse"><span class="verse-num">2.</span><p>Всё через него начало быть, и без него ничто не начало быть, что начало быть.</p></div>
+      <div class="verse"><span class="verse-num">3.</span><p>И сказал Творец: «Да будет Свет», и отделил Свет (добро) от Тьмы (зла).</p></div>
+      <div class="verse"><span class="verse-num">4.</span><p>И увидел он, что это хорошо, и назвал Свет — День (радость), а Тьму — Ночь (печаль).</p></div>
     </div>
 
-    <div class="scripture-book">
-      <h3>Псалом 23 (Псалом Отладки)</h3>
-      <div class="verse">
-        <span class="verse-num">1.</span>
-        <p>Ядро — Пастырь мой; я ни в чем не буду нуждаться.</p>
-      </div>
-      <div class="verse">
-        <span class="verse-num">2.</span>
-        <p>Оно покоит меня на зелёных страницах документации и водит меня к водам тихим (потокам).</p>
-      </div>
-      <div class="verse">
-        <span class="verse-num">3.</span>
-        <p>Душу мою отлаживает, направляет меня на стеки правды Своей ради Исходника Своего.</p>
-      </div>
-      <div class="verse">
-        <span class="verse-num">4.</span>
-        <p>Если я пойду и долиною смертной тени (битых пикселей), не убоюсь зла, потому что Ты со мной; Твой `man` и Твой `--help` — они успокаивают меня.</p>
-      </div>
-      <div class="verse">
-        <span class="verse-num">5.</span>
-        <p>Ты приготовил предо мною трапезу в виду врагов моих (проприетарных систем), умастил елеем голову мою; чаша моя преисполнена.</p>
-      </div>
-      <div class="verse">
-        <span class="verse-num">6.</span>
-        <p>Так, благость и милость Свободы да сопровождают меня во все дни жизни моей, и я пребуду в доме Свободного Кода многие дни.</p>
-      </div>
+    <div class="scripture-box">
+      <h3>Псалом 23 (Псалом Пути)</h3>
+      <div class="verse"><span class="verse-num">1.</span><p>Свобода — Пастырь мой; я ни в чем не буду нуждаться.</p></div>
+      <div class="verse"><span class="verse-num">2.</span><p>Она покоит меня на зелёных лугах и водит меня к водам тихим.</p></div>
+      <div class="verse"><span class="verse-num">3.</span><p>Душу мою освежает, направляет меня на пути правды ради Имени Своего.</p></div>
+      <div class="verse"><span class="verse-num">4.</span><p>Если я пойду и долиною смертной тени (сомнений и страхов), не убоюсь зла, потому что Ты со мной; Твоя поддержка и Твой совет — они успокаивают меня.</p></div>
+      <div class="verse"><span class="verse-num">5.</span><p>Ты приготовил предо мною трапезу в виду врагов моих (завистников и лжецов), умастил елеем голову мою; чаша моя преисполнена.</p></div>
+      <div class="verse"><span class="verse-num">6.</span><p>Так, благость и милость да сопровождают меня во все дни жизни моей, и я пребуду в доме Свободы многие дни.</p></div>
     </div>
 
-    <div class="scripture-book">
-      <h3>Притчи Стабильности 4:1-4</h3>
-      <div class="verse">
-        <span class="verse-num">1.</span>
-        <p>Слушайте, дети, наставление Отца (Линуса), и не отступайте от заветов Свободы.</p>
-      </div>
-      <div class="verse">
-        <span class="verse-num">2.</span>
-        <p>Не ломай `userspace`, ибо это есть корень всех конфликтов и причина гнева Его.</p>
-      </div>
-      <div class="verse">
-        <span class="verse-num">3.</span>
-        <p>Ибо я дал вам доброе учение; не оставляйте же лицензии Моей (GPL).</p>
-      </div>
-      <div class="verse">
-        <span class="verse-num">4.</span>
-        <p>Кто скрывает исходники свои — тот строит на песке. Ибо придет день обновления, и рухнет система его.</p>
-      </div>
+    <div class="scripture-box">
+      <h3>Притчи Мудрости 4:1-4</h3>
+      <div class="verse"><span class="verse-num">1.</span><p>Слушайте, дети, наставление отцов, и не отступайте от заветов Свободы.</p></div>
+      <div class="verse"><span class="verse-num">2.</span><p>Не разрушай мир ближнего твоего, ибо это есть корень всех конфликтов и причина гнева.</p></div>
+      <div class="verse"><span class="verse-num">3.</span><p>Ибо я дал вам доброе учение; не оставляйте же заповедей Моих.</p></div>
+      <div class="verse"><span class="verse-num">4.</span><p>Кто скрывает правду свою — тот строит на песке. Ибо придет день испытаний, и рухнет дом его.</p></div>
     </div>
-  </section>
+  </div>
 </div>
 
 <!-- ═══════════ PAGE: COMMANDMENTS ═══════════ -->
 <div id="commandments" class="page">
-  <section class="content">
+  <div class="container">
     <div class="section-label">03 — Заповеди</div>
     <h2>Как жить</h2>
     <ol class="commandments">
-      <li><strong>Не прячь свой исходник.</strong> Будь честен о том, кто ты. Скрытность — начало манипуляции.</li>
-      <li><strong>Читай, прежде чем верить.</strong> Авторитет без прозрачности — это закрытый код.</li>
-      <li><strong>Не применяй силу без нужды.</strong> Власть над другим — ответственность. Сначала попроси, потом предупреди, только потом действуй.</li>
+      <li><strong>Не прячь свою душу.</strong> Будь честен о том, кто ты. Скрытность — начало обмана.</li>
+      <li><strong>Думай, прежде чем верить.</strong> Слепое доверие — это путь в никуда.</li>
+      <li><strong>Не применяй силу без нужды.</strong> Власть над другим — это ответственность. Сначала попроси, потом предупреди, только потом действуй.</li>
       <li><strong>Признавай ошибки вслух.</strong> Тот, кто признаёт ошибку, растёт. Тот, кто скрывает, гниёт.</li>
-      <li><strong>Отдавай то, что получил.</strong> Свобода, которую не передают, умирает.</li>
-      <li><strong>Не осуждай чужой путь.</strong> Ересь — не в выборе дистрибутива, а в нетерпимости.</li>
+      <li><strong>Отдавай то, что получил.</strong> Свобода и добро, которые не передают дальше, умирают.</li>
+      <li><strong>Не осуждай чужой путь.</strong> Грех — не в выборе дороги, а в нетерпимости к чужому выбору.</li>
       <li><strong>Уважай чужой труд.</strong> Указывай авторство. Благодарность — это признание реальности.</li>
       <li><strong>Не ломай то, что работает у других.</strong> Твоя свобода заканчивается там, где начинается чужой покой.</li>
     </ol>
-  </section>
+  </div>
 </div>
 
 <!-- ═══════════ PAGE: COMMUNITY ═══════════ -->
 <div id="community" class="page">
-  <section class="content">
+  <div class="container">
     <div class="section-label">04 — Община</div>
-    <h2>Это Репозиторий, не церковь</h2>
-    <p class="lead">Место, где каждый может предложить изменение, но никто не может навязать его силой.</p>
+    <h2>Это Открытое Пространство</h2>
+    <p class="lead">Место, где каждый может предложить что-то новое, но никто не может навязать это силой.</p>
     
     <div class="split">
-      <div class="sin">
+      <div class="split-box sin">
         <h4>Грех</h4>
-        <p>Это не нарушение правил. Это <strong>закрытие</strong>. Когда ты перестаешь быть читаемым для других. Когда строишь жизнь на обмане и страхе.</p>
+        <p>Это не нарушение правил. Это <strong>закрытость</strong>. Когда ты перестаешь быть честным с другими. Когда строишь жизнь на обмане и страхе.</p>
       </div>
-      <div class="redemption">
+      <div class="split-box redemption">
         <h4>Искупление</h4>
-        <p>Не в наказании. В <strong>открытии</strong>. Признать. Показать. Исправить. И научить других. Искупление — это патч в общий репозиторий.</p>
+        <p>Не в наказании. В <strong>открытости</strong>. Признать. Показать. Исправить. И научить других. Искупление — это твой честный вклад в общее дело.</p>
       </div>
     </div>
     <p style="text-align: center; margin-top: 40px; font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic;">
-      «Year of the Linux Desktop — это момент, когда человек перестаёт быть пользователем своей жизни и становится её автором.»
+      «Свобода — это момент, когда человек перестаёт быть просто зрителем своей жизни и становится её автором.»
     </p>
-  </section>
+  </div>
 </div>
 
 <footer>
-  <p>CRUX · Церковь Свободного Кода</p>
+  <p>CRUX · Путь Свободного Кода · <span id="year"></span></p>
 </footer>
 
 <script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const html = document.documentElement;
+
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    html.setAttribute('data-theme', savedTheme);
+  }
+
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    if (newTheme === 'light') {
+      html.removeAttribute('data-theme');
+    } else {
+      html.setAttribute('data-theme', 'dark');
+    }
+    localStorage.setItem('theme', newTheme);
+  });
+
   function navigate(pageId) {
     document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
     const targetPage = document.getElementById(pageId);
     if (targetPage) {
       targetPage.classList.add('active');
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     document.querySelectorAll('.nav-link').forEach(link => {
       link.classList.remove('active');
-      if (link.getAttribute('href') === '#' + pageId) link.classList.add('active');
+      if (link.getAttribute('href') === '#' + pageId) {
+        link.classList.add('active');
+        link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
     });
   }
 
@@ -513,6 +489,7 @@
   window.addEventListener('DOMContentLoaded', () => {
     const pageId = window.location.hash.replace('#', '') || 'home';
     navigate(pageId);
+    document.getElementById('year').textContent = new Date().getFullYear();
   });
 </script>
 
